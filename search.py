@@ -11,20 +11,21 @@ from tkinter import *
 #     def __init__
 
 def init(data):
-    data.string = "Enter Text Here"
-    data.isPressed = False
-    data.rectCoords = (data.width/2-100, data.height/2-20,data.width/2+100,
-            data.height/2+20)
-    data.textCoords = (data.width/2, data.height/2)
+    data.string = "Search for Songs Here!"
+    data.isPressed = None
+    data.rectCoords = (data.width/2-100, 20,data.width/2+100,60)
+    data.textCoords = (data.width/2, 40)
     #data.cursorCoords = (data.width/2, data.height/2)
     data.cursorOn = False
     data.timerCount = 0
+    data.search = False
 
 
 def mousePressed(event, data):
     if (data.rectCoords[0]<event.x<data.rectCoords[2] and 
             data.rectCoords[1]<event.y<data.rectCoords[3]):
-        data.string = ""
+        if data.isPressed is None:
+            data.string = ""
         data.isPressed = True
     else:
         data.isPressed = False
@@ -37,6 +38,14 @@ def keyPressed(event, data):
                     data.string = data.string[:-2]
                 else:
                     data.string = data.string[:-1]
+        elif event.keysym == "space":
+            if len(data.string) > 0 and data.string[-1] == "|":
+                data.string = data.string[:-1] + " "
+            else:
+                data.string = data.string + " "
+        elif event.keysym == "enter":
+            data.isPressed = False
+            data.search = True
         else:
             if len(event.keysym)==1:
                 if len(data.string) > 0 and data.string[-1] == "|":
@@ -57,8 +66,14 @@ def timerFired(data):
                 data.cursorOn = True
                 data.string += "|"
     
-    
+def drawSongs(canvas, songs):
+    for i in range(len(songs)):
+        song, artist = songs[i]
+        drawIndivSong(i, song, artist)
 
+def drawIndivSong(num, song, artist):
+    canvas.create_text(20, 100 + 60*num, text = song + " -- " + artist, 
+            anchor = "w")
 
 
 def redrawAll(canvas, data):
@@ -111,4 +126,4 @@ def run(width=300, height=300):
     root.mainloop()  # blocks until window is closed
     print("bye!")
 
-run(400, 200)
+run(800, 600)
