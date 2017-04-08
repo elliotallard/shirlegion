@@ -17,7 +17,7 @@ def init(data):
             data.height/2+20)
     data.textCoords = (data.width/2, data.height/2)
     #data.cursorCoords = (data.width/2, data.height/2)
-    data.cursorOn = True
+    data.cursorOn = False
     data.timerCount = 0
 
 
@@ -37,8 +37,8 @@ def keyPressed(event, data):
             else:
                 data.string = data.string[:-1]
         else:
-            if event.keysym.isalnum():
-                if data.string[-1] == "|":
+            if len(event.keysym)==1:
+                if len(data.string) > 0 and data.string[-1] == "|":
                     data.string = data.string[:-1] + event.keysym
                 else:
                     data.string = data.string + event.keysym
@@ -46,7 +46,15 @@ def keyPressed(event, data):
 def timerFired(data):
     data.timerCount+=1
     if data.timerCount%5 == 0:
-        
+        if data.isPressed:
+            if data.cursorOn:
+                data.cursorOn = False
+                if "|" in data.string:
+                    index = data.string.index("|")
+                    data.string = data.string[:index] + data.string[index+1:]
+            else:
+                data.cursorOn = True
+                data.string += "|"
     
     
 
