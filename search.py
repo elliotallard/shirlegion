@@ -2,7 +2,10 @@
 # Barebones timer, mouse, and keyboard events
 
 from tkinter import *
-
+import spotipy
+import sys
+import pprint
+sp = spotipy.Spotify()
 ####################################
 # customize these functions
 ####################################
@@ -18,7 +21,7 @@ def init(data):
     #data.cursorCoords = (data.width/2, data.height/2)
     data.cursorOn = False
     data.timerCount = 0
-    data.search = False
+    data.search = ""
 
 
 def mousePressed(event, data):
@@ -43,9 +46,10 @@ def keyPressed(event, data):
                 data.string = data.string[:-1] + " "
             else:
                 data.string = data.string + " "
-        elif event.keysym == "enter":
+        elif event.keysym == "Return":
             data.isPressed = False
-            data.search = True
+            data.search = data.string
+            data.songs = search(data)
         else:
             if len(event.keysym)==1:
                 if len(data.string) > 0 and data.string[-1] == "|":
@@ -66,19 +70,34 @@ def timerFired(data):
                 data.cursorOn = True
                 data.string += "|"
     
-def drawSongs(canvas, songs):
-    for i in range(len(songs)):
-        song, artist = songs[i]
-        drawIndivSong(i, song, artist)
+def drawSongs(canvas, data):
+    for i in range(len(data.songs)):
+        song, artist = data.songs[i]
+        drawIndivSong(canvas, i, song, artist)
 
-def drawIndivSong(num, song, artist):
+def drawIndivSong(canvas, num, song, artist):
     canvas.create_text(20, 100 + 60*num, text = song + " -- " + artist, 
             anchor = "w")
+
+def search(data):
+    if data.search[-1] == '|':
+        data.search = data.search[:-1]
+    result = sp.search(data.search)
+    result = result['tracks']['items']
+    songList = []
+    for res in result:
+        if res['type'] == 'track':
+            songTitle = res['name']
+            artist = res['artists'][0]['name']
+            songList.append((songTitle, artist))
+    return songList
 
 
 def redrawAll(canvas, data):
     canvas.create_rectangle(data.rectCoords, fill = "green")
     canvas.create_text(data.textCoords, text = data.string)
+    if data.search != "":
+        drawSongs(canvas, data)
 
 ####################################
 # use the run function as-is
