@@ -16,6 +16,7 @@ def init(data):
     data.rectCoords = (data.width/2-100, data.height/2-20,data.width/2+100,
             data.height/2+20)
     data.textCoords = (data.width/2, data.height/2)
+    data.cursorCoords = (data.width/2, data.height/2)
 
 
 def mousePressed(event, data):
