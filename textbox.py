@@ -32,13 +32,21 @@ def mousePressed(event, data):
 def keyPressed(event, data):
     if data.isPressed:
         if event.keysym == "BackSpace":
-            data.string = data.string[:-1]
+            if data.string[-1] == "|":
+                data.string = data.string[:-2]
+            else:
+                data.string = data.string[:-1]
         else:
             if event.keysym.isalnum():
-                data.string = data.string + event.keysym
+                if data.string[-1] == "|":
+                    data.string = data.string[:-1] + event.keysym
+                else:
+                    data.string = data.string + event.keysym
 
 def timerFired(data):
     data.timerCount+=1
+    if data.timerCount%5 == 0:
+        
     
     
 
