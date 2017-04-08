@@ -32,10 +32,11 @@ def mousePressed(event, data):
 def keyPressed(event, data):
     if data.isPressed:
         if event.keysym == "BackSpace":
-            if data.string[-1] == "|":
-                data.string = data.string[:-2]
-            else:
-                data.string = data.string[:-1]
+            if len(data.string) > 0:
+                if data.string[-1] == "|":
+                    data.string = data.string[:-2]
+                else:
+                    data.string = data.string[:-1]
         else:
             if len(event.keysym)==1:
                 if len(data.string) > 0 and data.string[-1] == "|":
