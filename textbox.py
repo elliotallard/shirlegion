@@ -16,7 +16,9 @@ def init(data):
     data.rectCoords = (data.width/2-100, data.height/2-20,data.width/2+100,
             data.height/2+20)
     data.textCoords = (data.width/2, data.height/2)
-    data.cursorCoords = (data.width/2, data.height/2)
+    #data.cursorCoords = (data.width/2, data.height/2)
+    data.cursorOn = True
+    data.timerCount = 0
 
 
 def mousePressed(event, data):
@@ -36,7 +38,11 @@ def keyPressed(event, data):
                 data.string = data.string + event.keysym
 
 def timerFired(data):
-    pass
+    data.timerCount+=1
+    
+    
+
+
 
 def redrawAll(canvas, data):
     canvas.create_rectangle(data.rectCoords, fill = "green")
