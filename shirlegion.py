@@ -14,6 +14,22 @@ import copy
 class Struct(object): pass
 data = Struct()
 
+# removeDsStore.py
+import os
+def removeDsStore(path):
+    if (os.path.isdir(path) == False):
+        if (path.endswith(".DS_Store")):
+            print("removing:", path)
+            os.remove(path)
+    else:
+        # recursive case: it's a folder
+        for filename in os.listdir(path):
+            removeDsStore(path + os.sep + filename)
+
+print("Removing .DS_Store files")
+removeDsStore("images")
+print("Done")
+
 def init(data):
     # Model
     data.folder = 'images'
@@ -50,6 +66,13 @@ def init(data):
     data.mode = 'home'
     data.isGameEnd = False
 
+    data.endRow = -1
+    data.endCol = -1
+    data.endX = -1
+    data.endY = -1
+    data.dx = -1
+    data.dy = -1
+
     while (not data.isGameEnd):
         pygame.display.update()
         data.time = data.clock.tick(50)
@@ -65,6 +88,8 @@ def init(data):
     pygame.time.delay(1000)
     pygame.quit()
     print('Bye!')
+
+
 
 # Model
 def newBoard(rows, cols):
@@ -125,7 +150,7 @@ def generatePiece(data):
                 randomChoices += [(row, col)]
     if (randomChoices == []):
         data.isGameEnd = True
-        return
+        drawGameOver(data)
     place = random.choice(randomChoices)
     data.board[place[0]][place[1]][0] = random.choice(data.randomPieces)
 
@@ -170,6 +195,12 @@ def drawGameOver(data):
     text = data.font.render('Game Over!', True, data.WHITE)
     data.screen.blit(text, (data.width//2 - text.get_width()//2,
                             data.height - text.get_height()*2))
+    pygame.draw.rect(data.screen, data.colors[data.goal], (data.endX + data.dx*data.endCol,
+                 data.endY + data.dy*data.endRow, data.side, data.side))
+    text = data.bigFont.render('42', True, data.WHITE)
+    fortyTwoX = (data.endX + data.dx*data.endCol + data.side / 2 - text.get_width()//2)
+    fortyTwoY = (data.endY + data.dy*data.endRow + data.side / 2 - text.get_height()//2)
+    data.screen.blit(text, (fortyTwoX,fortyTwoY))
 
 def drawWinMessage(data):
     text = data.font.render('You Won!', True, data.WHITE)
@@ -191,10 +222,15 @@ def drawGame(data):
                     if (data.board[row][col][0] != 0):
                         value = data.board[row][col][0]
                         if (value == data.goal):
+                            data.endRow = row
+                            data.endCol = col
+                            data.endX = x0
+                            data.endY = y0
+                            data.dx = dx
+                            data.dy = dy
                             data.isGameEnd = True
                         pygame.draw.rect(data.screen, data.colors[value], (x0 + dx*col,
                                          y0 + dy*row, data.side, data.side))
-                        ############ I THINK TEXT SHOULD BE HERE
                         if (data.board[row][col][1] == None):
                             staffMember = random.sample(data.staffByValues[value], 1)[0]
                             data.board[row][col][1] = staffMember
@@ -230,9 +266,11 @@ def keyPressed(data, key):
         for col in range(data.cols):
             if (data.board[row][col][0] == data.goal):
                 data.isGameEnd = True
+                drawGameOver(data)
             elif (data.board[row][col][0] == 0):
                 return
     data.isGameEnd = True
+    drawGameOver(data)
 
 def makeMoveUp(data):
     for col in range(data.cols):
@@ -305,96 +343,5 @@ def moveRightRecursively(data, row, col, value):
         moveRightRecursively(data, row, col+1, [value[0] * 2, None])
     else:
         data.board[row][col] = value
-
-# def makeMoveUp(board):
-#     noComboList = []
-#     for row in range(1,4):
-#         for col in range(0,4):
-#             value = board[row][col][0]          
-#             if value !=0:
-#                 newRow = row - 1
-#                 #moves up until it hits a value other than 0 or topBoard
-#                 while board[newRow][col] == 0:
-#                     if newRow < 0: break
-#                     newRow -= 1
-#                 board[newRow+1][col] = value
-#                 if newRow+1 != row:
-#                     board[row][col][0] = 0
-#                 #then compare 
-#                 if newRow+1 > 0:
-#                     if board[newRow][col] == board[newRow+1][col] and (newRow, col) not in noComboList:
-#                         if checkWin(board[row][newCol],board[row][newCol-1]):
-#                             return True 
-#                         board[newRow][col] = value*2
-#                         noComboList.append((newRow,col))
-#                         board[newRow+1][col] = 0
-    
-# def makeMoveDown(board):
-#     noComboList = []
-#     for row in range(2,-1,-1):
-#         for col in range(4):
-#             value = board[row][col][0]          
-#             if value != 0:
-#                 newRow = row +1
-#                 while board[newRow][col]==0:
-#                     if newRow>3: break
-#                     newRow += 1
-#                 board[newRow-1][col] = value
-#                 if newRow-1 != row:
-#                     board[row][col][0] = 0
-#                 if newRow-1 < 3:
-#                     if board[newRow][col] == board[newRow-1][col] and (newRow, col) not in noComboList:
-#                         if checkWin(board[row][newCol],board[row][newCol-1]):
-#                             return True 
-#                         board[newRow][col] = value * 2
-#                         noComboList.append((newRow,col))
-#                         board[newRow-1][col] = 0
-
-# def makeMoveLeft(board):
-#     noComboList = []
-#     for col in range(1,4):
-#         for row in range(4):
-#             value = board[row][col][0]          
-#             if value !=0:
-#                 newCol = col - 1
-#                 #moves up until it hits a value other than 0 or topBoard
-#                 while board[row][newCol] == 0:
-#                     if newCol < 0: break
-#                     newCol -= 1
-#                 board[row][newCol+1] = value
-#                 if newCol+1 != col:
-#                     board[row][col][0] = 0                
-#                 #then compare 
-#                 if newCol+1 > 0:
-#                     if board[row][newCol] == board[row][newCol+1] and (row, newCol) not in noComboList:
-#                         if checkWin(board[row][newCol],board[row][newCol-1]):
-#                             return True 
-#                         board[row][newCol] = value*2
-#                         noComboList.append((row, newCol))
-#                         board[row][newCol+1] = 0
-    
-# def makeMoveRight(board):
-#     noComboList = []
-#     for col in range(2,-1,-1):
-#         for row in range(4):
-#             value = board[row][col][0]          
-#             if value != 0:
-#                 newCol= col + 1
-#                 while board[row][newCol] == 0:
-#                     if newCol>3: break
-#                     newCol +=1
-#                 board[row][newCol-1] = value
-#                 if newCol-1 != col:
-#                     board[row][col][0] = 0
-#                 if newCol -1 < 3:
-#                     if board[row][newCol] == board[row][newCol-1] and (row, newCol) not in noComboList:
-#                         if checkWin(board[row][newCol],board[row][newCol-1]):
-#                             return True  
-#                         board[row][newCol] = value*2
-#                         noComboList.append((row, newCol))
-#                         board[row][newCol-1]=0
-
-# def checkWin(value1, value2):
-#     return (value1 + value2 == 128)
 
 init(data)
