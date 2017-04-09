@@ -55,7 +55,6 @@ def init(data):
         data.time = data.clock.tick(50)
         for event in pygame.event.get():
             if (event.type == pygame.QUIT):
-                data.isGameEnd = True
                 break
             elif (event.type == pygame.KEYDOWN):
                 keyPressed(data, event.key)
@@ -178,7 +177,7 @@ def drawGame(data):
                                                          data.height))
     pygame.draw.rect(data.screen, data.WHITE, (data.padding, data.padding,
                      data.width-2*data.padding, data.height-2*data.padding))
-    if ((not data.isGameEnd)):
+    if (not data.isGameEnd):
         try:
             for row in range(data.rows):
                 for col in range(data.cols):
