@@ -1,0 +1,24 @@
+import random
+# ALSO CHECKS IF GAME IS OVER (BY FILLING THE BOARD)
+#generates a piece on a board
+# if it is full, it will return 0
+def generatePiece(board):
+    pieces = [2,4]
+    piece = random.choice(pieces)
+    rows, cols = len(board), len(board[0])
+    randPieces = []
+    for row in range(rows):
+        for col in range(cols):
+            if board[row][col] == 0:
+                randPieces += [(row, col)]
+    if randPieces == []: return 0
+    place = random.choice(randPieces)
+    board[place[0]][place[1]] = piece
+
+board = [[1,1,1],
+         [2,2,2],
+         [2,3,4]]
+
+print(generatePiece(board))
+
+print (board)
