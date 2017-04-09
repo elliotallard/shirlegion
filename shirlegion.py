@@ -50,7 +50,7 @@ def init(data):
     data.mode = 'home'
     data.isGameEnd = False
 
-    while (True):
+    while (not data.isGameEnd):
         pygame.display.update()
         data.time = data.clock.tick(50)
         for event in pygame.event.get():
@@ -61,6 +61,8 @@ def init(data):
         data.screen.fill(data.WHITE)
         redrawAll(data)
         pygame.display.flip()
+    drawGameOver(data)
+    pygame.time.delay(1000)
     pygame.quit()
     print('Bye!')
 
@@ -167,11 +169,12 @@ def drawGameMessage(data):
 def drawGameOver(data):
     text = data.font.render('Game Over!', True, data.WHITE)
     data.screen.blit(text, (data.width//2 - text.get_width()//2,
-                            data.height//2 - text.get_height()//2))
+                            data.height - text.get_height()*2))
+
 def drawWinMessage(data):
     text = data.font.render('You Won!', True, data.WHITE)
     data.screen.blit(text, (data.width//2 - text.get_width()//2,
-                            data.height//2 - text.get_height()//2))
+                            data.height - text.get_height()*2))
 def drawGame(data):
     pygame.draw.rect(data.screen, data.DARK_GRAY, (0, 0, data.width, 
                                                          data.height))
@@ -191,6 +194,7 @@ def drawGame(data):
                             data.isGameEnd = True
                         pygame.draw.rect(data.screen, data.colors[value], (x0 + dx*col,
                                          y0 + dy*row, data.side, data.side))
+                        ############ I THINK TEXT SHOULD BE HERE
                         if (data.board[row][col][1] == None):
                             staffMember = random.sample(data.staffByValues[value], 1)[0]
                             data.board[row][col][1] = staffMember
@@ -207,7 +211,7 @@ def drawGame(data):
                                          data.side - 2*data.margin,
                                          data.side - 2*data.margin))
         except:
-            data.isGameEnd = True
+            drawGameOver(data)
 
 # Controller
 def keyPressed(data, key):
