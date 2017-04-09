@@ -26,6 +26,8 @@ def makeMoveUp(board):
                 #then compare 
                 if newRow+1 > 0:
                     if board[newRow][col] == board[newRow+1][col] and (newRow, col) not in noComboList:
+                        if checkWin(board[row][newCol],board[row][newCol-1]):
+                            return True 
                         board[newRow][col] = value*2
                         noComboList.append((newRow,col))
                         board[newRow+1][col] = 0
@@ -46,6 +48,8 @@ def makeMoveDown(board):
                     board[row][col] = 0
                 if newRow-1 < 3:
                     if board[newRow][col] == board[newRow-1][col] and (newRow, col) not in noComboList:
+                        if checkWin(board[row][newCol],board[row][newCol-1]):
+                            return True 
                         board[newRow][col] = value * 2
                         noComboList.append((newRow,col))
                         board[newRow-1][col] = 0
@@ -68,6 +72,8 @@ def makeMoveLeft(board):
                 #then compare 
                 if newCol+1 > 0:
                     if board[row][newCol] == board[row][newCol+1] and (row, newCol) not in noComboList:
+                        if checkWin(board[row][newCol],board[row][newCol-1]):
+                            return True 
                         board[row][newCol] = value*2
                         noComboList.append((row, newCol))
                         board[row][newCol+1] = 0
@@ -88,10 +94,15 @@ def makeMoveRight(board):
                     board[row][col] = 0
                 if newCol -1 < 3:
                     if board[row][newCol] == board[row][newCol-1] and (row, newCol) not in noComboList:
+                        if checkWin(board[row][newCol],board[row][newCol-1]):
+                            return True  
                         board[row][newCol] = value*2
                         noComboList.append((row, newCol))
                         board[row][newCol-1]=0
     return board
+    
+def checkWin(value1, value2):
+    return value1 + value2 == 128
                 
 def testUp():
     
@@ -161,11 +172,11 @@ def testUp():
     [0,2,4,2],
     [0,0,0,2],
     [2,2,8,2],
-    [2,4,4,2]]
+    [64,4,0,64]]
     sol = [
     [0,2,4,2],
     [0,0,0,2],
     [0,4,8,2],
-    [0,2,8,2]]
+    [0,64,4,64]]
     assert (makeMoveRight(board) == sol)
 testUp()
