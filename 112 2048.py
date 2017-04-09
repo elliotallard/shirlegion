@@ -307,7 +307,6 @@ def makeMoveUp(data):
                         board[newRow][col] = [value*2, None]
                         noComboList.append((newRow,col))
                         board[newRow+1][col]= [0, None]
-    print(board)
     generatePiece(data)
     
 def makeMoveDown(data):
@@ -332,7 +331,6 @@ def makeMoveDown(data):
                         board[newRow][col] = [value * 2, None]
                         noComboList.append((newRow,col))
                         board[newRow-1][col] = [0, None]
-    print(board)
     generatePiece(data)
 
 def makeMoveLeft(data):
@@ -358,7 +356,6 @@ def makeMoveLeft(data):
                         board[row][newCol] = [value*2, None]
                         noComboList.append((row, newCol))
                         board[row][newCol+1] = [0, None]
-    print(board)
     generatePiece(data)
     
 def makeMoveRight(data):
@@ -383,7 +380,6 @@ def makeMoveRight(data):
                         board[row][newCol] = [value*2, None]
                         noComboList.append((row, newCol))
                         board[row][newCol-1] = [0, None]
-    print(board)
     generatePiece(data)
     
 def checkWin(value1, value2):
