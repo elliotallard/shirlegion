@@ -296,17 +296,18 @@ def makeMoveUp(data):
                 while board[newRow][col][0] == 0:
                     if newRow < 0: break
                     newRow -= 1
-                board[newRow+1][col][0] = value
+                board[newRow+1][col]= board[row][col]
                 if newRow+1 != row:
-                    board[row][col][0] = 0
+                    board[row][col]=[0, None]
                 #then compare 
                 if newRow+1 > 0:
                     if board[newRow][col][0] == board[newRow+1][col][0] and (newRow, col) not in noComboList:
                         if checkWin(board[newRow][col][0],board[newRow+1][col][0]):
                             return True 
-                        board[newRow][col][0] = value*2
+                        board[newRow][col] = [value*2, None]
                         noComboList.append((newRow,col))
-                        board[newRow+1][col][0] = 0
+                        board[newRow+1][col]= [0, None]
+    print(board)
     generatePiece(data)
     
 def makeMoveDown(data):
@@ -321,16 +322,17 @@ def makeMoveDown(data):
                     if newRow>3: break
                     newRow += 1
                     if newRow == 4:break
-                board[newRow-1][col][0] = value
+                board[newRow-1][col] = board[row][col]
                 if newRow-1 != row:
-                    board[row][col][0] = 0
+                    board[row][col] = [0, None]
                 if newRow-1 < 3:
                     if board[newRow][col][0] == board[newRow-1][col][0] and (newRow, col) not in noComboList:
                         if checkWin(board[newRow-1][col][0],board[newRow][col][0]):
                             return True 
-                        board[newRow][col][0] = value * 2
+                        board[newRow][col] = [value * 2, None]
                         noComboList.append((newRow,col))
-                        board[newRow-1][col][0] = 0
+                        board[newRow-1][col] = [0, None]
+    print(board)
     generatePiece(data)
 
 def makeMoveLeft(data):
@@ -345,17 +347,18 @@ def makeMoveLeft(data):
                 while board[row][newCol][0] == 0:
                     if newCol < 0: break
                     newCol -= 1
-                board[row][newCol+1][0] = value
+                board[row][newCol+1] = board[row][col]
                 if newCol+1 != col:
-                    board[row][col][0] = 0                
+                    board[row][col] = [0, None]               
                 #then compare 
                 if newCol+1 > 0:
                     if board[row][newCol][0] == board[row][newCol+1][0] and (row, newCol) not in noComboList:
                         if checkWin(board[row][newCol][0],board[row][newCol-1][0]):
                             return True 
-                        board[row][newCol][0] = value*2
+                        board[row][newCol] = [value*2, None]
                         noComboList.append((row, newCol))
-                        board[row][newCol+1][0] = 0
+                        board[row][newCol+1] = [0, None]
+    print(board)
     generatePiece(data)
     
 def makeMoveRight(data):
@@ -370,16 +373,17 @@ def makeMoveRight(data):
                     if newCol>3: break
                     newCol +=1
                     if newCol == 4: break
-                board[row][newCol-1][0] = value
+                board[row][newCol-1] = board[row][col]
                 if newCol-1 != col:
-                    board[row][col][0] = 0
+                    board[row][col] = [0, None]
                 if newCol -1 < 3:
                     if board[row][newCol][0] == board[row][newCol-1][0] and (row, newCol) not in noComboList:
                         if checkWin(board[row][newCol][0],board[row][newCol-1][0]):
                             return True  
-                        board[row][newCol][0] = value*2
+                        board[row][newCol] = [value*2, None]
                         noComboList.append((row, newCol))
-                        board[row][newCol-1][0]=0
+                        board[row][newCol-1] = [0, None]
+    print(board)
     generatePiece(data)
     
 def checkWin(value1, value2):
