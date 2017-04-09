@@ -302,8 +302,6 @@ def makeMoveUp(data):
                 #then compare 
                 if newRow+1 > 0:
                     if board[newRow][col][0] == board[newRow+1][col][0] and (newRow, col) not in noComboList:
-                        if checkWin(board[newRow][col][0],board[newRow+1][col][0]):
-                            return True 
                         board[newRow][col] = [value*2, None]
                         noComboList.append((newRow,col))
                         board[newRow+1][col]= [0, None]
@@ -326,8 +324,6 @@ def makeMoveDown(data):
                     board[row][col] = [0, None]
                 if newRow-1 < 3:
                     if board[newRow][col][0] == board[newRow-1][col][0] and (newRow, col) not in noComboList:
-                        if checkWin(board[newRow-1][col][0],board[newRow][col][0]):
-                            return True 
                         board[newRow][col] = [value * 2, None]
                         noComboList.append((newRow,col))
                         board[newRow-1][col] = [0, None]
@@ -351,8 +347,6 @@ def makeMoveLeft(data):
                 #then compare 
                 if newCol+1 > 0:
                     if board[row][newCol][0] == board[row][newCol+1][0] and (row, newCol) not in noComboList:
-                        if checkWin(board[row][newCol][0],board[row][newCol-1][0]):
-                            return True 
                         board[row][newCol] = [value*2, None]
                         noComboList.append((row, newCol))
                         board[row][newCol+1] = [0, None]
@@ -375,14 +369,11 @@ def makeMoveRight(data):
                     board[row][col] = [0, None]
                 if newCol -1 < 3:
                     if board[row][newCol][0] == board[row][newCol-1][0] and (row, newCol) not in noComboList:
-                        if checkWin(board[row][newCol][0],board[row][newCol-1][0]):
-                            return True  
                         board[row][newCol] = [value*2, None]
                         noComboList.append((row, newCol))
                         board[row][newCol-1] = [0, None]
     generatePiece(data)
     
-def checkWin(value1, value2):
-    return value1 + value2 == 128
+
     
 init(data)
